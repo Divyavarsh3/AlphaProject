@@ -2,6 +2,6 @@
   <Project Path="../Alpha.Commom/Alpha.Common.csproj" />
   <Project Path="../Alpha.data/Alpha.Data.csproj" />
   <Project Path="../Alpha.Service/Alpha.Service.csproj" />
-  <Project Path="../Aplha.Store/Aplha.Store.csproj" />
+  <Project Path="../Aplha.Store/Alpha.Store.csproj" />
   <Project Path="Alpha.API.csproj" />
 </Solution>
