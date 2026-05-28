@@ -1,10 +1,18 @@
-﻿using Alpha.Common.Models;
+﻿
+using Alpha.Common.Models;
+
 using Alpha.Service.Interfaces;
+
+using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Alpha.API.Controllers
 {
+    [Authorize]
+
     [Route("api/[controller]")]
+
     [ApiController]
     public class BookController : ControllerBase
     {
@@ -15,13 +23,20 @@ namespace Alpha.API.Controllers
             _bookService = bookService;
         }
 
-        // GET ALL BOOKS
+        // GET ALL BOOKS WITH PAGINATION
+        [Authorize(Roles = "Admin")]
+
         [HttpGet]
-        public async Task<IActionResult> GetBooks()
+        public async Task<IActionResult> GetBooks(
+        int pageNumber = 1,
+        int pageSize = 5)
         {
             try
             {
-                var result = await _bookService.GetBooks();
+                var result =
+                await _bookService.GetBooks(
+                    pageNumber,
+                    pageSize);
 
                 return Ok(result);
             }
@@ -32,12 +47,15 @@ namespace Alpha.API.Controllers
         }
 
         // GET BOOK BY ID
+        [Authorize(Roles = "Admin")]
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBookById(Guid id)
         {
             try
             {
-                var result = await _bookService.GetBookById(id);
+                var result =
+                await _bookService.GetBookById(id);
 
                 return Ok(result);
             }
@@ -47,7 +65,9 @@ namespace Alpha.API.Controllers
             }
         }
 
-        // INSERT BOOK
+        // INSERT BOOK - ADMIN ONLY
+        [Authorize(Roles = "Admin")]
+
         [HttpPost]
         public async Task<IActionResult> InsertBook(Books book)
         {
@@ -58,7 +78,7 @@ namespace Alpha.API.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var result = await _bookService.InsertBook(book);
+                await _bookService.InsertBook(book);
 
                 return Ok("Book Inserted Successfully");
             }
@@ -68,7 +88,9 @@ namespace Alpha.API.Controllers
             }
         }
 
-        // UPDATE BOOK
+        // UPDATE BOOK - ADMIN ONLY
+        [Authorize(Roles = "Admin")]
+
         [HttpPut]
         public async Task<IActionResult> UpdateBook(Books book)
         {
@@ -79,7 +101,7 @@ namespace Alpha.API.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var result = await _bookService.UpdateBook(book);
+                await _bookService.UpdateBook(book);
 
                 return Ok("Book Updated Successfully");
             }
@@ -89,13 +111,15 @@ namespace Alpha.API.Controllers
             }
         }
 
-        // DELETE BOOK
+        // DELETE BOOK - ADMIN ONLY
+        [Authorize(Roles = "Admin")]
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(Guid id)
         {
             try
             {
-                var result = await _bookService.DeleteBook(id);
+                await _bookService.DeleteBook(id);
 
                 return Ok("Book Deleted Successfully");
             }
@@ -106,3 +130,4 @@ namespace Alpha.API.Controllers
         }
     }
 }
+
